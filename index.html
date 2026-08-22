@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>CINÉMATEK — Catalogue de films</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- Police -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="min-h-screen bg-[#0b0b0f] font-['Inter'] text-white">
+
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
+    <nav class="border-b border-white/10 bg-[#0b0b0f]/95">
+
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-5">
+
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+
+                <div
+                    class="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-400 text-xl shadow-lg shadow-amber-400/20">
+                    🎬
+                </div>
+
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-wide">
+                        CINÉMATEK
+                    </h1>
+
+                    <p class="text-xs text-zinc-500">
+                        Catalogue de films
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- Navigation -->
+            <div class="hidden items-center gap-8 text-sm font-medium text-zinc-400 sm:flex">
+
+                <a href="#films" class="text-white transition hover:text-amber-400">
+                    Films
+                </a>
+
+                <a href="#statistiques" class="transition hover:text-amber-400">
+                    Statistiques
+                </a>
+
+            </div>
+
+
+            <!-- Actualiser -->
+            <button id="reloadBtn"
+                class="rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold transition hover:border-amber-400/40 hover:bg-amber-400/10 hover:text-amber-400">
+                ↻ Actualiser
+            </button>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+    <header class="relative overflow-hidden">
+
+        <!-- Décoration -->
+        <div class="absolute -right-40 -top-40 h-96 w-96 rounded-full bg-amber-400/10 blur-3xl">
+        </div>
+
+        <div class="absolute -left-40 bottom-0 h-96 w-96 rounded-full bg-red-600/10 blur-3xl">
+        </div>
+
+
+        <div class="relative mx-auto max-w-7xl px-5 pb-16 pt-20">
+
+            <div class="max-w-3xl">
+
+                <p class="mb-4 text-sm font-bold uppercase tracking-[0.3em] text-amber-400">
+                    Votre univers cinéma
+                </p>
+
+                <h2 class="text-4xl font-extrabold leading-tight sm:text-6xl">
+                    Découvrez votre
+                    <span class="text-amber-400">
+                        prochain film.
+                    </span>
+                </h2>
+
+                <p class="mt-6 max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg">
+                    Explorez un catalogue de films, recherchez vos titres préférés
+                    et découvrez de nouveaux films selon vos envies.
+                </p>
+
+
+                <!-- Recherche principale -->
+                <div class="mt-8 max-w-2xl">
+
+                    <div
+                        class="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-2 shadow-2xl backdrop-blur">
+
+                        <span class="pl-3 text-xl text-zinc-500">
+                            🔎
+                        </span>
+
+                        <input id="searchInput" type="search" placeholder="Rechercher un film..."
+                            class="w-full bg-transparent px-2 py-3 text-white outline-none placeholder:text-zinc-600" />
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         CONTENU
+    ====================================================== -->
+    <main class="mx-auto max-w-7xl px-5 pb-20">
+
+
+        <!-- =================================================
+             FILTRES
+        ================================================== -->
+        <section id="films" class="mb-12">
+
+            <div class="mb-5 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+
+                <div>
+
+                    <p class="text-xs font-bold uppercase tracking-widest text-amber-400">
+                        Explorer
+                    </p>
+
+                    <h3 class="mt-1 text-2xl font-bold">
+                        Films à l'affiche
+                    </h3>
+
+                </div>
+
+
+                <!-- Tri -->
+                <select id="sortSelect"
+                    class="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300 outline-none transition focus:border-amber-400">
+
+                    <option value="default" class="bg-[#15151b]">
+                        Tri par défaut
+                    </option>
+
+                    <option value="name-asc" class="bg-[#15151b]">
+                        Titre A-Z
+                    </option>
+
+                    <option value="rating-desc" class="bg-[#15151b]">
+                        Meilleure note
+                    </option>
+
+                    <option value="year-desc" class="bg-[#15151b]">
+                        Plus récent
+                    </option>
+
+                    <option value="popularity-desc" class="bg-[#15151b]">
+                        Plus populaire
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Genres -->
+            <div id="genreList" class="flex gap-2 overflow-x-auto pb-2">
+
+                <button data-genre="all"
+                    class="genre-btn whitespace-nowrap rounded-full bg-amber-400 px-5 py-2.5 text-sm font-bold text-black">
+                    Tous
+                </button>
+
+            </div>
+
+
+            <!-- Année -->
+            <div class="mt-5 flex items-center gap-3">
+
+                <label for="yearSelect" class="text-sm text-zinc-500">
+                    À partir de :
+                </label>
+
+                <select id="yearSelect"
+                    class="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-300 outline-none focus:border-amber-400">
+
+                    <option value="all" class="bg-[#15151b]">
+                        Toutes les années
+                    </option>
+
+                </select>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             LOADER
+        ================================================== -->
+        <div id="loader" class="hidden py-20 text-center">
+
+            <div class="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-zinc-700 border-t-amber-400">
+            </div>
+
+            <p class="mt-5 text-sm text-zinc-500">
+                Chargement des films...
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             MESSAGE
+        ================================================== -->
+        <div id="message" class="hidden py-20 text-center">
+        </div>
+
+
+        <!-- =================================================
+             LISTE DES FILMS
+        ================================================== -->
+        <section id="movieList" class="grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        </section>
+
+
+        <!-- =================================================
+             STATISTIQUES
+        ================================================== -->
+        <section id="statistiques" class="mt-20 border-t border-white/10 pt-12">
+
+            <div class="mb-8">
+
+                <p class="text-xs font-bold uppercase tracking-widest text-amber-400">
+                    En quelques chiffres
+                </p>
+
+                <h3 class="mt-1 text-2xl font-bold">
+                    Notre catalogue
+                </h3>
+
+            </div>
+
+
+            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+                <!-- Total -->
+                <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+
+                    <p class="text-sm text-zinc-500">
+                        Films affichés
+                    </p>
+
+                    <p id="totalMovies" class="mt-3 text-3xl font-extrabold">
+                        0
+                    </p>
+
+                </div>
+
+
+                <!-- Note -->
+                <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+
+                    <p class="text-sm text-zinc-500">
+                        Note moyenne
+                    </p>
+
+                    <p id="averageRating" class="mt-3 text-3xl font-extrabold text-amber-400">
+                        0 ⭐
+                    </p>
+
+                </div>
+
+
+                <!-- Meilleur film -->
+                <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+
+                    <p class="text-sm text-zinc-500">
+                        Film le mieux noté
+                    </p>
+
+                    <p id="bestMovie" class="mt-3 truncate text-lg font-bold">
+                        -
+                    </p>
+
+                </div>
+
+
+                <!-- Populaire -->
+                <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+
+                    <p class="text-sm text-zinc-500">
+                        Film le plus populaire
+                    </p>
+
+                    <p id="mostPopular" class="mt-3 truncate text-lg font-bold">
+                        -
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+    <footer class="border-t border-white/10 py-8">
+
+        <div
+            class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-5 text-center sm:flex-row sm:text-left">
+
+            <div>
+
+                <p class="font-bold">
+                    🎬 CINÉMATEK
+                </p>
+
+                <p class="mt-1 text-xs text-zinc-600">
+                    Application web de consultation de films
+                </p>
+
+            </div>
+
+            <div class="text-right">
+
+                <p class="text-xs text-zinc-600">
+                    Projet académique — UAM Polytech Diamniadio
+                </p>
+
+                <p class="mt-1 text-xs text-zinc-700">
+                    Données et images fournies par TMDB
+                </p>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+    <!-- CSS personnalisé -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+
+</body>
+
+</html>

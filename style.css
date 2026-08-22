@@ -1,0 +1,407 @@
+/* =========================================================
+   CINÉMATEK — STYLE DES CARTES DE FILMS
+========================================================= */
+
+.movie-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 18px;
+    background: #15151b;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.movie-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(251, 191, 36, 0.45);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+}
+
+
+/* =========================================================
+   AFFICHE
+========================================================= */
+
+.movie-poster-container {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    background: #202027;
+}
+
+.movie-poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.movie-card:hover .movie-poster {
+    transform: scale(1.06);
+}
+
+
+/* =========================================================
+   DÉGRADÉ SUR L'AFFICHE
+========================================================= */
+
+.movie-poster-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.8),
+            rgba(0, 0, 0, 0.05) 55%
+        );
+}
+
+
+/* =========================================================
+   NOTE
+========================================================= */
+
+.movie-rating {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    background: rgba(0, 0, 0, 0.75);
+    border: 1px solid rgba(251, 191, 36, 0.35);
+
+    color: #fbbf24;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    backdrop-filter: blur(8px);
+}
+
+
+/* =========================================================
+   CONTENU DE LA CARTE
+========================================================= */
+
+.movie-content {
+    padding: 16px;
+}
+
+.movie-title {
+    overflow: hidden;
+
+    color: white;
+
+    font-size: 17px;
+    font-weight: 800;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.movie-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-top: 7px;
+
+    color: #71717a;
+
+    font-size: 13px;
+}
+
+.movie-year {
+    color: #a1a1aa;
+}
+
+.movie-genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+
+    margin-top: 12px;
+}
+
+.movie-genre {
+    padding: 4px 8px;
+
+    border-radius: 999px;
+
+    background: rgba(251, 191, 36, 0.08);
+
+    color: #d4d4d8;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.movie-description {
+    display: -webkit-box;
+
+    margin-top: 12px;
+
+    overflow: hidden;
+
+    color: #71717a;
+
+    font-size: 12px;
+    line-height: 1.6;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+}
+
+
+/* =========================================================
+   BOUTON / LIEN DÉTAIL
+========================================================= */
+
+.movie-details {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    margin-top: 15px;
+
+    color: #fbbf24;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    transition: color 0.2s ease;
+}
+
+.movie-details:hover {
+    color: #fcd34d;
+}
+
+
+/* =========================================================
+   IMAGE ABSENTE
+========================================================= */
+
+.movie-poster-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #18181b,
+            #27272a
+        );
+
+    color: #52525b;
+
+    font-size: 42px;
+}
+
+/* =========================================================
+   FICHE DÉTAILLÉE
+========================================================= */
+
+.movie-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.movie-modal.show { opacity: 1; }
+
+.movie-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(8px);
+}
+
+.movie-modal-content {
+    position: relative;
+    z-index: 2;
+    width: min(950px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #15151b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+    transform: translateY(20px) scale(0.98);
+    transition: transform 0.25s ease;
+}
+
+.movie-modal.show .movie-modal-content {
+    transform: translateY(0) scale(1);
+}
+
+.movie-modal-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 5;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.movie-modal-close:hover {
+    background: #fbbf24;
+    color: #111;
+    transform: rotate(90deg);
+}
+
+.movie-modal-body {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 35px;
+    padding: 35px;
+}
+
+.movie-modal-poster {
+    overflow: hidden;
+    border-radius: 16px;
+    background: #202027;
+}
+
+.movie-modal-poster img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 520px;
+    object-fit: cover;
+}
+
+.movie-modal-no-poster {
+    min-height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+}
+
+.movie-modal-info { padding-top: 15px; }
+
+.movie-modal-label {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: #fbbf24;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 3px;
+}
+
+.movie-modal-info h2 {
+    margin: 0 0 12px;
+    color: white;
+    font-size: clamp(28px, 4vw, 46px);
+    line-height: 1.05;
+}
+
+.movie-modal-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    color: #a1a1aa;
+    font-size: 15px;
+}
+
+.movie-modal-genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 30px;
+}
+
+.movie-modal-genres span {
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(251, 191, 36, 0.12);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    color: #fbbf24;
+    font-size: 13px;
+}
+
+.movie-modal-info h3 {
+    margin-bottom: 10px;
+    color: white;
+    font-size: 20px;
+}
+
+.movie-modal-overview {
+    color: #a1a1aa;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.movie-modal-extra {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.movie-modal-extra div {
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.movie-modal-extra strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #71717a;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.movie-modal-extra span {
+    color: white;
+    font-weight: 600;
+}
+
+@media (max-width: 700px) {
+    .movie-modal { padding: 15px; }
+    .movie-modal-body {
+        grid-template-columns: 1fr;
+        padding: 25px;
+    }
+    .movie-modal-poster {
+        max-width: 280px;
+        margin: auto;
+    }
+    .movie-modal-extra { grid-template-columns: 1fr; }
+}
+
