@@ -143,10 +143,24 @@ async function loadMovies(page = 1) {
 
     try {
 
-        console.log(`🎬 Récupération des films depuis notre API — page ${page}...`);
+        const selectedYear = yearSelect.value;
+
+        console.log(
+            `🎬 Récupération des films — page ${page} — année : ${selectedYear}`
+        );
+
+        let url =
+            `${API_URL}/movies?page=${page}&sort_by=popularity.desc`;
+
+        // Ajouter l'année sélectionnée à la requête
+        if (selectedYear && selectedYear !== "all") {
+            url += `&year=${selectedYear}`;
+        }
+
+        console.log("🌐 URL API :", url);
 
         const response = await fetch(
-            `${API_URL}/movies?page=${page}&sort_by=popularity.desc`,
+            url,
             {
                 headers: {
                     accept: "application/json"
@@ -155,7 +169,9 @@ async function loadMovies(page = 1) {
         );
 
         if (!response.ok) {
-            throw new Error(`Erreur HTTP : ${response.status}`);
+            throw new Error(
+                `Erreur HTTP : ${response.status}`
+            );
         }
 
         const data = await response.json();
@@ -167,7 +183,10 @@ async function loadMovies(page = 1) {
         currentPage = data.page || page;
         totalPages = data.total_pages || 1;
 
-        console.log("✅ Films récupérés :", movies);
+        console.log(
+            "✅ Films récupérés :",
+            movies
+        );
 
         console.log(
             `🎬 Nombre de films reçus : ${movies.length}`
@@ -180,15 +199,14 @@ async function loadMovies(page = 1) {
     } catch (error) {
 
         console.error(
-            "❌ Impossible de récupérer les films :",
+            "❌ Erreur récupération des films :",
             error
         );
 
-        showMessage(
-            "Impossible de récupérer les films."
-        );
-
-        throw error;
+        if (message) {
+            message.textContent =
+                "Impossible de récupérer les films.";
+        }
     }
 }
 
@@ -1177,8 +1195,20 @@ searchInput.addEventListener(
 
 yearSelect.addEventListener(
     "change",
-    () => {
+    async () => {
 
+        console.log(
+            `📅 Changement d'année : ${yearSelect.value}`
+        );
+
+        // Revenir à la première page
+        currentPage = 1;
+
+        // Récupérer les films correspondant à l'année
+        // sélectionnée depuis le serveur / TMDB
+        await loadMovies(1);
+
+        // Conserver les autres filtres actifs
         applyFilters();
 
     }

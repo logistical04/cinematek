@@ -17,7 +17,10 @@ if (!TMDB_TOKEN) {
 // Permet de servir index.html, style.css et script.js
 app.use(express.static(path.join(__dirname)));
 
-// Route de test
+// =========================================================
+// ROUTE DE TEST
+// =========================================================
+
 app.get("/api/test", (req, res) => {
     res.json({
         success: true,
@@ -25,13 +28,46 @@ app.get("/api/test", (req, res) => {
     });
 });
 
-// Route pour récupérer les films
+// =========================================================
+// ROUTE POUR RÉCUPÉRER LES FILMS
+// =========================================================
+
+// =========================================================
+// ROUTE POUR RÉCUPÉRER LES FILMS
+// =========================================================
+
 app.get("/api/movies", async (req, res) => {
+
     try {
+
         const page = req.query.page || 1;
+        const year = req.query.year;
+
+        // URL de base TMDB
+        let tmdbUrl =
+            `https://api.themoviedb.org/3/discover/movie` +
+            `?include_adult=false` +
+            `&include_video=false` +
+            `&language=fr-FR` +
+            `&page=${page}` +
+            `&sort_by=popularity.desc`;
+
+        // -------------------------------------------------
+        // FILTRE PAR ANNÉE
+        // -------------------------------------------------
+
+        if (year && /^\d{4}$/.test(year)) {
+
+            tmdbUrl +=
+                `&primary_release_date.gte=${year}-01-01` +
+                `&primary_release_date.lte=${year}-12-31`;
+
+        }
+
+        console.log("🎬 Requête TMDB :", tmdbUrl);
 
         const response = await fetch(
-            `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=fr-FR&page=${page}&sort_by=popularity.desc`,
+            tmdbUrl,
             {
                 headers: {
                     Authorization: `Bearer ${TMDB_TOKEN}`,
@@ -41,7 +77,11 @@ app.get("/api/movies", async (req, res) => {
         );
 
         if (!response.ok) {
-            throw new Error(`TMDB a répondu avec le statut ${response.status}`);
+
+            throw new Error(
+                `TMDB a répondu avec le statut ${response.status}`
+            );
+
         }
 
         const data = await response.json();
@@ -49,18 +89,29 @@ app.get("/api/movies", async (req, res) => {
         res.json(data);
 
     } catch (error) {
-        console.error("❌ Erreur TMDB :", error.message);
+
+        console.error(
+            "❌ Erreur TMDB :",
+            error.message
+        );
 
         res.status(500).json({
             success: false,
             message: "Impossible de récupérer les films."
         });
+
     }
+
 });
 
-// Route pour récupérer les genres
+// =========================================================
+// ROUTE POUR RÉCUPÉRER LES GENRES
+// =========================================================
+
 app.get("/api/genres", async (req, res) => {
+
     try {
+
         const response = await fetch(
             "https://api.themoviedb.org/3/genre/movie/list?language=fr-FR",
             {
@@ -72,7 +123,11 @@ app.get("/api/genres", async (req, res) => {
         );
 
         if (!response.ok) {
-            throw new Error(`TMDB a répondu avec le statut ${response.status}`);
+
+            throw new Error(
+                `TMDB a répondu avec le statut ${response.status}`
+            );
+
         }
 
         const data = await response.json();
@@ -80,17 +135,28 @@ app.get("/api/genres", async (req, res) => {
         res.json(data);
 
     } catch (error) {
-        console.error("❌ Erreur TMDB genres :", error.message);
+
+        console.error(
+            "❌ Erreur TMDB genres :",
+            error.message
+        );
 
         res.status(500).json({
             success: false,
             message: "Impossible de récupérer les genres."
         });
+
     }
+
 });
 
-// Démarrage du serveur
+// =========================================================
+// DÉMARRAGE DU SERVEUR
+// =========================================================
+
 app.listen(PORT, () => {
+
     console.log("🎬 CINÉMATEK démarré !");
     console.log(`🌐 http://localhost:${PORT}`);
+
 });
